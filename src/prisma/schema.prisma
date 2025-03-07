@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+  output = "../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model News {
+  id          String   @id @default(uuid())
+  title       String   @default("untitled")
+  slug        String
+  pubDate     DateTime @unique
+  link        String   @default("")
+  description String   @default("")
+  category    String   @default("")
+  creator     String   @default("")
+  content     String   @default("")
+  media       Media?   @relation("NewsMedia")
+
+  @@index([slug])
+  @@index([pubDate])
+}
+
+model Media {
+  id           String  @id @default(uuid())
+  contentUrl   String  @default("")
+  thumbnailUrl String  @default("")
+  credit       String  @default("")
+  title        String  @default("")
+  text         String  @default("")
+  newsId       String? @unique 
+  news         News?   @relation("NewsMedia", fields: [newsId], references: [id], onDelete: Cascade)
+
+  @@index([newsId])
+}
