@@ -89,4 +89,3 @@ export const note = new Elysia({ prefix: '/note' })
       body: 'memo',
     },
   )
-

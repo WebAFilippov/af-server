@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output = "../../node_modules/.prisma/client"
+  output   = "../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -9,30 +9,51 @@ datasource db {
 }
 
 model News {
-  id          String   @id @default(uuid())
-  title       String   @default("untitled")
-  slug        String
-  pubDate     DateTime @unique
-  link        String   @default("")
-  description String   @default("")
-  category    String   @default("")
-  creator     String   @default("")
-  content     String   @default("")
-  media       Media?   @relation("NewsMedia")
+  id         String    @id @default(uuid())
+  title      String
+  slug       String    @unique
+  link       String?
+  pubDate    DateTime
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  creatorId  String?
+  creator    Creator?  @relation(fields: [creatorId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  media      Media?    @relation("NewsMedia")
+  content    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([slug])
   @@index([pubDate])
+  @@index([categoryId])
+  @@index([creatorId])
 }
 
 model Media {
   id           String  @id @default(uuid())
-  contentUrl   String  @default("")
-  thumbnailUrl String  @default("")
-  credit       String  @default("")
-  title        String  @default("")
-  text         String  @default("")
-  newsId       String? @unique 
-  news         News?   @relation("NewsMedia", fields: [newsId], references: [id], onDelete: Cascade)
+  contentUrl   String?
+  thumbnailUrl String?
+  credit       String?
+  title        String?
+  text         String?
+  newsId       String  @unique
+  news         News    @relation("NewsMedia", fields: [newsId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([newsId])
+}
+
+model Creator {
+  id   String @id @default(uuid())
+  name String @unique
+  news News[]
+}
+
+model Category {
+  id    String @id @default(uuid())
+  title String @unique
+  news  News[]
 }

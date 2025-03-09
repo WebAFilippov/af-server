@@ -15,11 +15,13 @@ export default [
   },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
-  eslintConfigPrettier, // Отключает конфликты с Prettier
+  eslintConfigPrettier,
   {
-    plugins: { prettier },
+    plugins: {
+      prettier,
+    },
     rules: {
-      'prettier/prettier': 'error', // Заставляет ESLint учитывать настройки Prettier
+      'prettier/prettier': 'error',
     },
   },
 ]
