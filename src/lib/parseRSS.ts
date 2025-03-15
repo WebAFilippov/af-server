@@ -1,6 +1,6 @@
 import { parseStringPromise } from 'xml2js'
 import { createSlug } from '../utils/createSlug'
-import { RSSItem } from '../types/news.types'
+import { RSSItem } from '../types/news'
 
 export const parseRSS = async (data: string): Promise<RSSItem[]> => {
   const parsedData = await parseStringPromise(data)

@@ -4,6 +4,8 @@ import { opentelemetry } from '@elysiajs/opentelemetry'
 
 import { NewsController } from './controllers/news'
 import { cronFetchNews } from './lib/cronFetchNews'
+import { CategoriesController } from './controllers/categories'
+import { cors } from '@elysiajs/cors'
 
 const app = new Elysia()
   .use(opentelemetry())
@@ -13,8 +15,18 @@ const app = new Elysia()
 
     console.error(error)
   })
+  .onTransform(({ body, params, query, path, request: { method } }) => {
+    console.log(`${method} ${path}`, {
+      body,
+      query,
+      params,
+    })
+  })
+  .use(cors())
   .use(cronFetchNews)
+  .use(CategoriesController)
   .use(NewsController)
-  .listen(Bun.env.PORT || 3000)
 
-console.log(`🦊 Elysia запущена на ${app.server?.hostname}:${app.server?.port}`)
+app.listen(process.env.PORT || 3000, () =>
+  console.log(`🦊 Server started at ${app.server?.url.origin}`),
+)

@@ -2,7 +2,7 @@ import cron, { Patterns } from '@elysiajs/cron'
 import { fetchNews } from '../shared/api'
 import { FETCH_NEWS_URL } from '../shared/config'
 import { parseRSS } from './parseRSS'
-import { NewsService } from '../service/news.service'
+import { NewsService } from '../service/news'
 
 export const cronFetchNews = cron({
   name: 'fetchNews',
