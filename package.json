@@ -8,13 +8,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
-    "start": "prisma generate && prisma migrate && bun run src/index.ts",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write .",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
     "prisma:seed": "prisma db seed",
-    "prisma:migrate": "prisma migrate deploy",
+    "generate": "prisma generate --schema=./src/prisma/schema.prisma",
+    "migrate": "prisma migrate deploy --schema=./src/prisma/schema.prisma",
+    "deploy": "npm run generate && npm run migrate && npm run start",
+    "start": "bun run src/index.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
