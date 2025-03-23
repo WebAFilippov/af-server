@@ -1,3 +1,5 @@
+import { randomUUIDv7 } from 'bun'
+
 export const formatCategories = (
   categories: {
     id: string
@@ -7,11 +9,25 @@ export const formatCategories = (
     }
   }[],
 ) => {
-  return categories.map((category) => {
-    return {
+  const totalCount = categories.reduce(
+    (acc, category) => acc + category._count.news,
+    0,
+  )
+
+  const categoriesFormatted = [
+    ...categories.map((category) => ({
       id: category.id,
       title: category.title,
       count: category._count.news,
-    }
-  })
+    })),
+    {
+      id: randomUUIDv7(),
+      title: 'Все',
+      count: totalCount,
+    },
+  ]
+
+  const sortedCategories = categoriesFormatted.sort((a, b) => b.count - a.count)
+
+  return sortedCategories
 }
