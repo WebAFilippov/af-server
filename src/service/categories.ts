@@ -1,4 +1,3 @@
-import { delay } from '../lib/fakeDelay'
 import { formatCategories } from '../lib/formattedCategories'
 import { prismaClient } from '../prisma/prisma-clients'
 import { ResponseCategories } from '../types/categories'
@@ -20,8 +19,6 @@ export abstract class CategoriesService {
       })
 
       const formattedCategories = formatCategories(categories)
-
-      await delay(Math.round((Math.random() + 1) * 1000))
 
       return {
         success: true,
