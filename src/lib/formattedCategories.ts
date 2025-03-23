@@ -1,7 +1,6 @@
-import { createSlug } from '../utils/createSlug'
-
 export const formatCategories = (
   categories: {
+    id: string
     title: string
     _count: {
       news: number
@@ -10,7 +9,7 @@ export const formatCategories = (
 ) => {
   return categories.map((category) => {
     return {
-      slug: createSlug(category.title),
+      id: category.id,
       title: category.title,
       count: category._count.news,
     }

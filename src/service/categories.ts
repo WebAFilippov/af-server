@@ -9,6 +9,7 @@ export abstract class CategoriesService {
     try {
       const categories = await CategoriesService.prisma.category.findMany({
         select: {
+          id: true,
           title: true,
           _count: {
             select: {
