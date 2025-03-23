@@ -1,3 +1,5 @@
+import { delay } from '../lib/fakeDelay'
+import { formatCategories } from '../lib/formattedCategories'
 import { prismaClient } from '../prisma/prisma-clients'
 import { ResponseCategories } from '../types/categories'
 
@@ -9,12 +11,21 @@ export abstract class CategoriesService {
       const categories = await CategoriesService.prisma.category.findMany({
         select: {
           title: true,
+          _count: {
+            select: {
+              news: true,
+            },
+          },
         },
       })
 
+      const formattedCategories = formatCategories(categories)
+
+      await delay(Math.round((Math.random() + 1) * 1000))
+
       return {
         success: true,
-        data: categories,
+        data: formattedCategories,
       }
     } catch (error) {
       return {

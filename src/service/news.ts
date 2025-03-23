@@ -1,6 +1,7 @@
 import { ResponseNews, RSSItem } from '../types/news'
 import { prismaClient } from '../prisma/prisma-clients'
 import Elysia from 'elysia'
+import { parseField } from '../lib/parseField'
 
 export abstract class NewsService {
   static prisma = prismaClient
@@ -8,23 +9,35 @@ export abstract class NewsService {
 
   static getAll = async (query: {
     cursor?: string
-    take: number
-    q?: string
-    category?: string
-    sort: 'desc' | 'asc'
+    take: string
+    qs?: string
+    category: string | null
+    sortBy: 'pubDate' | 'liked' | 'views'
+    sortOrder: 'desc' | 'asc'
+    lastTime: string
   }): Promise<ResponseNews> => {
     try {
       const news = await NewsService.prisma.news.findMany({
-        take: query.take + 1,
+        take: Number(query.take) + 1,
         ...(query.cursor && {
           skip: 1,
           cursor: { slug: query.cursor },
         }),
         where: {
-          ...(query.q && { title: { contains: query.q, mode: 'insensitive' } }),
-          ...(query.category && { category: { title: query.category } }),
+          ...(query.qs && {
+            title: { contains: query.qs, mode: 'insensitive' },
+          }),
+          ...(query.category &&
+            query.category !== 'Все' && {
+              category: { title: query.category },
+            }),
+          createdAt: {
+            lte: new Date(Number(query.lastTime)),
+          },
         },
-        orderBy: { pubDate: query.sort },
+        orderBy: {
+          [query.sortBy]: query.sortOrder,
+        },
         select: {
           id: true,
           title: true,
@@ -54,7 +67,7 @@ export abstract class NewsService {
         },
       })
 
-      const hasNextPage = news.length > query.take
+      const hasNextPage = news.length > Number(query.take)
 
       if (hasNextPage) {
         news.pop()
@@ -62,26 +75,26 @@ export abstract class NewsService {
 
       const nextCursor = news.length > 0 ? news[news.length - 1].slug : null
 
-      // const parsedNews = news.map((item) => ({
-      //   ...item,
-      //   content: item.content ? parseField(item.content) : null,
-      //   media: item.media
-      //     ? {
-      //         ...item.media,
-      //         credit: item.media.credit
-      //           ? parseField(item.media.credit, true)
-      //           : null,
-      //         title: item.media.title
-      //           ? parseField(item.media.title, true)
-      //           : null,
-      //         text: item.media.text ? parseField(item.media.text, true) : null,
-      //       }
-      //     : null,
-      // }))
+      const parsedNews = news.map((item) => ({
+        ...item,
+        content: item.content ? parseField(item.content) : null,
+        media: item.media
+          ? {
+              ...item.media,
+              credit: item.media.credit
+                ? parseField(item.media.credit, true)
+                : null,
+              title: item.media.title
+                ? parseField(item.media.title, true)
+                : null,
+              text: item.media.text ? parseField(item.media.text, true) : null,
+            }
+          : null,
+      }))
 
       return {
         success: true,
-        data: news,
+        data: parsedNews,
         hasNextPage,
         nextCursor,
       }

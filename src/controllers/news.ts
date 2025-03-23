@@ -6,15 +6,36 @@ export const NewsController = new Elysia({ prefix: '/news', tags: ['news'] })
   .model({
     query: t.Object({
       cursor: t.Optional(t.String()),
-      take: t.Number({ minimum: 10 }),
-      q: t.Optional(t.String()),
-      category: t.Optional(t.String()),
-      sort: t.Enum({ desc: 'desc', asc: 'asc' }, { default: 'desc' }),
+      take: t.String(),
+      qs: t.Optional(t.String()),
+      category: t.String(),
+      sortBy: t.Enum({
+        pubDate: 'pubDate',
+        liked: 'liked',
+        views: 'views',
+      }),
+      sortOrder: t.Enum({ desc: 'desc', asc: 'asc' }, { default: 'desc' }),
+      lastTime: t.String(),
     }),
   })
   .guard({
     query: 'query',
   })
-  .get('/', ({ query: { cursor, take, q, category, sort } }) => {
-    return NewsService.getAll({ cursor, take, q, category, sort })
-  })
+  .get(
+    '/',
+    ({
+      query: { cursor, take, qs, category, sortBy, sortOrder, lastTime },
+    }) => {
+      const data = NewsService.getAll({
+        cursor,
+        take,
+        qs,
+        category,
+        sortBy,
+        sortOrder,
+        lastTime,
+      })
+
+      return data
+    },
+  )

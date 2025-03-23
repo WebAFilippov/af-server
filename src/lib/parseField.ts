@@ -30,7 +30,7 @@ export const parseField = (data: string, isMedia?: boolean): ParsedNode[] => {
       root,
       tag: node.tagName || 'text',
       parentNode: parentTag,
-      text: children.length ? '' : $node.text() || '',
+      text: $node.text() || '',
       attributes: node.attribs || {},
       children,
     }
