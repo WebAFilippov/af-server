@@ -1,4 +1,4 @@
-import { randomUUIDv7 } from 'bun'
+import { v4 as uuidv4 } from 'uuid'
 
 export const formatCategories = (
   categories: {
@@ -21,7 +21,7 @@ export const formatCategories = (
       count: category._count.news,
     })),
     {
-      id: randomUUIDv7(),
+      id: uuidv4(),
       title: 'Все',
       count: totalCount,
     },
