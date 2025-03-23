@@ -8,7 +8,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
-    "start": "bun run src/index.ts",
+    "start": "prisma generate && bun run src/index.ts",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write .",
     "prisma:push": "prisma db push",
@@ -46,3 +46,4 @@
     "protobufjs"
   ]
 }
+
