@@ -32,15 +32,15 @@ export interface News {
   slug: string
   link: string | null
   pubDate: Date
-  content: ParsedNode[] | null
+  content: string | null
   category: { title: string } | null
   creator: { name: string } | null
   media: {
     contentUrl: string | null
     thumbnailUrl: string | null
-    credit: ParsedNode[] | null
-    title: ParsedNode[] | null
-    text: ParsedNode[] | null
+    credit: string | null
+    title: string | null
+    text: string | null
   } | null
 }
 

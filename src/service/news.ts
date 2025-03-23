@@ -1,7 +1,7 @@
 import { ResponseNews, RSSItem } from '../types/news'
 import { prismaClient } from '../prisma/prisma-clients'
 import Elysia from 'elysia'
-import { parseField } from '../lib/parseField'
+// import { parseField } from '../lib/parseField'
 
 export abstract class NewsService {
   static prisma = prismaClient
@@ -75,26 +75,26 @@ export abstract class NewsService {
 
       const nextCursor = news.length > 0 ? news[news.length - 1].slug : null
 
-      const parsedNews = news.map((item) => ({
-        ...item,
-        content: item.content ? parseField(item.content) : null,
-        media: item.media
-          ? {
-              ...item.media,
-              credit: item.media.credit
-                ? parseField(item.media.credit, true)
-                : null,
-              title: item.media.title
-                ? parseField(item.media.title, true)
-                : null,
-              text: item.media.text ? parseField(item.media.text, true) : null,
-            }
-          : null,
-      }))
+      // const parsedNews = news.map((item) => ({
+      //   ...item,
+      //   content: item.content ? parseField(item.content) : null,
+      //   media: item.media
+      //     ? {
+      //         ...item.media,
+      //         credit: item.media.credit
+      //           ? parseField(item.media.credit, true)
+      //           : null,
+      //         title: item.media.title
+      //           ? parseField(item.media.title, true)
+      //           : null,
+      //         text: item.media.text ? parseField(item.media.text, true) : null,
+      //       }
+      //     : null,
+      // }))
 
       return {
         success: true,
-        data: parsedNews,
+        data: news,
         hasNextPage,
         nextCursor,
       }
