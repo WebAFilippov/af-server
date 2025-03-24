@@ -13,11 +13,6 @@ export abstract class NewsService {
   }): Promise<ResponseNews> => {
     try {
       const news = await NewsService.prisma.news.findMany({
-        take: 25 + 1,
-        ...(query.cursor && {
-          skip: 1,
-          cursor: { slug: query.cursor },
-        }),
         where: {
           ...(query.category &&
             query.category !== 'Все' && {
@@ -27,6 +22,12 @@ export abstract class NewsService {
             lte: new Date(Number(query.timelapse)),
           },
         },
+        take: 25 + 1,
+        ...(query.cursor && {
+          skip: 1,
+          cursor: { slug: query.cursor },
+        }),
+        orderBy: [{ pubDate: 'desc' }, { slug: 'desc' }],
         select: {
           id: true,
           title: true,
