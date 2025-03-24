@@ -1,7 +1,7 @@
 import cron, { Patterns } from '@elysiajs/cron'
 import { fetchNews } from '../shared/api'
 import { FETCH_NEWS_URL } from '../shared/config'
-import { parseRSS } from './parseRSS'
+import { parseRSS } from '../lib/parseRSS'
 import { NewsService } from '../service/news'
 
 export const cronFetchNews = cron({
@@ -25,7 +25,7 @@ export const cronFetchNews = cron({
       )
       console.log(`Общее время: ${(endUpsert - startFetch).toFixed(2)} мс`)
     } catch (error) {
-      console.log(`Error fetchNews: ${error}`)
+      console.log(`Error cron_fetch_news: ${error}`)
     }
   },
 })

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { load, CheerioAPI, Cheerio } from 'cheerio'
-import { ParsedNode } from '../types/news'
+import { ParsedNode } from '../types/news_old'
 
 export const parseField = (data: string, isMedia?: boolean): ParsedNode[] => {
   const processedData = isMedia ? `<span>${data}</span>` : data

@@ -2,10 +2,10 @@ import { Elysia } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
 import { opentelemetry } from '@elysiajs/opentelemetry'
 
-import { NewsController } from './controllers/news'
-import { cronFetchNews } from './lib/cronFetchNews'
+import { cronFetchNews } from './controllers/cron-fetch-news'
 import { CategoriesController } from './controllers/categories'
 import { cors } from '@elysiajs/cors'
+import { NewsController } from './controllers/news'
 
 const app = new Elysia()
   .use(opentelemetry())
