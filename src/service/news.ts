@@ -8,7 +8,6 @@ export abstract class NewsService {
 
   static getAll = async (query: {
     cursor?: string
-    qs?: string
     category: string | null
   }): Promise<ResponseNews> => {
     try {
@@ -19,9 +18,6 @@ export abstract class NewsService {
           cursor: { slug: query.cursor },
         }),
         where: {
-          ...(query.qs && {
-            title: { contains: query.qs, mode: 'insensitive' },
-          }),
           ...(query.category &&
             query.category !== 'Все' && {
               category: { title: query.category },
