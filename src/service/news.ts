@@ -13,7 +13,7 @@ export abstract class NewsService {
   }): Promise<ResponseNews> => {
     try {
       const news = await NewsService.prisma.news.findMany({
-        take: 25,
+        take: 25 + 1,
         ...(query.cursor && {
           skip: 1,
           cursor: { slug: query.cursor },
