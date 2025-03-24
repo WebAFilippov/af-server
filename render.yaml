@@ -1,0 +1,23 @@
+databases:
+- name: af-elysia-postgres
+  databaseName: postgres_elysia
+  user: postgres_user
+  plan: free
+  region: frankfurt
+  ipAllowList:
+  - source: 0.0.0.0/0
+    description: everywhere
+  postgresMajorVersion: "16"
+services:
+- type: web
+  name: af-server
+  runtime: node
+  repo: https://github.com/WebAFilippov/af-server
+  plan: free
+  region: frankfurt
+  buildCommand: bun install
+  startCommand: bun run deploy
+  autoDeploy: false
+  previews:
+    generation: automatic
+version: "1"
