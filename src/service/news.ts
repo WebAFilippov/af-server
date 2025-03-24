@@ -9,6 +9,7 @@ export abstract class NewsService {
   static getAll = async (query: {
     cursor?: string
     category: string | null
+    timelapse: string
   }): Promise<ResponseNews> => {
     try {
       const news = await NewsService.prisma.news.findMany({
@@ -22,6 +23,9 @@ export abstract class NewsService {
             query.category !== 'Все' && {
               category: { title: query.category },
             }),
+          createdAt: {
+            lte: new Date(query.timelapse),
+          },
         },
         orderBy: {
           createdAt: 'desc',
