@@ -27,9 +27,6 @@ export abstract class NewsService {
             lte: new Date(Number(query.timelapse)),
           },
         },
-        orderBy: {
-          pubDate: 'desc',
-        },
         select: {
           id: true,
           title: true,
