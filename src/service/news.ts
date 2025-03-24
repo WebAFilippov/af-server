@@ -23,12 +23,12 @@ export abstract class NewsService {
             query.category !== 'Все' && {
               category: { title: query.category },
             }),
-          createdAt: {
-            lte: new Date(query.timelapse),
+          pubDate: {
+            lte: new Date(Number(query.timelapse)),
           },
         },
         orderBy: {
-          createdAt: 'desc',
+          pubDate: 'desc',
         },
         select: {
           id: true,
