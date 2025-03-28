@@ -27,7 +27,7 @@ export abstract class CategoriesService {
               news: {
                 where: {
                   pubDate: {
-                    gte: new Date(Number(query.timelapse)),
+                    lte: new Date(Number(query.timelapse)),
                   },
                 },
               },
