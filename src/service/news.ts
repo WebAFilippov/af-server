@@ -17,7 +17,7 @@ export abstract class NewsService {
               category: { title: query.category },
             }),
           pubDate: {
-            gte: new Date(Number(query.timelapse)),
+            lte: new Date(Number(query.timelapse)),
           },
         },
         take: 25 + 1,
@@ -56,7 +56,6 @@ export abstract class NewsService {
       })
 
       const hasNextPage = news.length > 25
-
       if (hasNextPage) {
         news.pop()
       }

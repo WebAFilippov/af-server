@@ -10,6 +10,15 @@ export abstract class CategoriesService {
   }): Promise<ResponseCategories> => {
     try {
       const categories = await CategoriesService.prisma.category.findMany({
+        where: {
+          news: {
+            some: {
+              pubDate: {
+                lte: new Date(Number(query.timelapse)),
+              },
+            },
+          },
+        },
         select: {
           id: true,
           title: true,
