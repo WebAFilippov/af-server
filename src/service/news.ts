@@ -6,7 +6,7 @@ export abstract class NewsService {
 
   static getAll = async (query: {
     cursor?: string
-    category: string | null
+    category: string
     timelapse: string
   }): Promise<ResponseNews> => {
     try {

@@ -4,16 +4,20 @@ import { NewsService } from '../service/news'
 
 export const NewsController = new Elysia({ prefix: '/news', tags: ['news'] })
   .model({
-    query: t.Object({
+    queryNews: t.Object({
       cursor: t.Optional(t.String()),
       category: t.String(),
       timelapse: t.String(),
     }),
   })
   .guard({
-    query: 'query',
+    query: 'queryNews',
   })
-  .get('/', ({ query: { cursor, category, timelapse } }) => {
+  .get('/', ({ query: { cursor, category, timelapse }, error }) => {
+    if (!category || !timelapse) {
+      return error(400, { success: false, message: 'Bad request' })
+    }
+
     const data = NewsService.getAll({
       cursor,
       category,

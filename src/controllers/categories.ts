@@ -6,13 +6,17 @@ export const CategoriesController = new Elysia({
   tags: ['category'],
 })
   .model({
-    query: t.Object({
+    queryCategories: t.Object({
       timelapse: t.String(),
     }),
   })
   .guard({
-    query: 'query',
+    query: 'queryCategories',
   })
-  .get('/', ({ query: { timelapse } }) => {
+  .get('/', ({ query: { timelapse }, error }) => {
+    if (!timelapse) {
+      return error(400, { success: false, message: 'Bad request' })
+    }
+
     return CategoriesService.getAll({ timelapse })
   })
