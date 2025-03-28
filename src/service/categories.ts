@@ -1,11 +1,13 @@
-import { formatCategories } from '../lib/formattedCategories'
 import { prismaClient } from '../prisma/prisma-clients'
 import { ResponseCategories } from '../types/categories'
+import { v4 as uuidv4 } from 'uuid'
 
 export abstract class CategoriesService {
   static prisma = prismaClient
 
-  static getAll = async (): Promise<ResponseCategories> => {
+  static getAll = async (query: {
+    timelapse: string
+  }): Promise<ResponseCategories> => {
     try {
       const categories = await CategoriesService.prisma.category.findMany({
         select: {
@@ -13,17 +15,44 @@ export abstract class CategoriesService {
           title: true,
           _count: {
             select: {
-              news: true,
+              news: {
+                where: {
+                  pubDate: {
+                    lte: new Date(Number(query.timelapse)),
+                  },
+                },
+              },
             },
+          },
+        },
+        orderBy: {
+          news: {
+            _count: 'desc',
           },
         },
       })
 
-      const formattedCategories = formatCategories(categories)
+      const totalCount = categories.reduce(
+        (acc, category) => acc + category._count.news,
+        0,
+      )
+
+      const categoriesFormatted = [
+        ...categories.map((category) => ({
+          id: category.id,
+          title: category.title,
+          count: category._count.news,
+        })),
+        {
+          id: uuidv4(),
+          title: 'Все',
+          count: totalCount,
+        },
+      ]
 
       return {
         success: true,
-        data: formattedCategories,
+        data: categoriesFormatted,
       }
     } catch (error) {
       return {

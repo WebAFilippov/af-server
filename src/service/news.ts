@@ -1,10 +1,8 @@
 import { ResponseNews, RSSItem } from '../types/news'
 import { prismaClient } from '../prisma/prisma-clients'
-import Elysia from 'elysia'
 
 export abstract class NewsService {
   static prisma = prismaClient
-  static wsApp: Elysia | null = null
 
   static getAll = async (query: {
     cursor?: string
@@ -27,7 +25,7 @@ export abstract class NewsService {
           skip: 1,
           cursor: { slug: query.cursor },
         }),
-        orderBy: [{ pubDate: 'desc' }, { slug: 'desc' }],
+        orderBy: [{ pubDate: 'desc' }],
         select: {
           id: true,
           title: true,
@@ -181,8 +179,6 @@ export abstract class NewsService {
           },
         })
 
-        this.wsApp?.server?.publish('/', 'test msg')
-        this.wsApp?.server?.publish('', 'hello')
         if (!existingNews) {
           console.log(`New: ${upsertedNews.slug}`)
         }
