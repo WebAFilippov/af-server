@@ -13,7 +13,7 @@ export abstract class CategoriesService {
         where: {
           news: {
             some: {
-              pubDate: {
+              createdAt: {
                 lte: new Date(Number(query.timelapse)),
               },
             },
@@ -26,7 +26,7 @@ export abstract class CategoriesService {
             select: {
               news: {
                 where: {
-                  pubDate: {
+                  createdAt: {
                     lte: new Date(Number(query.timelapse)),
                   },
                 },

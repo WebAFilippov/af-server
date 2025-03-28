@@ -16,7 +16,7 @@ export abstract class NewsService {
             query.category !== 'Все' && {
               category: { title: query.category },
             }),
-          pubDate: {
+          createdAt: {
             lte: new Date(Number(query.timelapse)),
           },
         },
