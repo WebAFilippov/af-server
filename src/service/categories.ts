@@ -18,7 +18,7 @@ export abstract class CategoriesService {
               news: {
                 where: {
                   pubDate: {
-                    lte: new Date(Number(query.timelapse)),
+                    gte: new Date(Number(query.timelapse)),
                   },
                 },
               },
@@ -38,16 +38,16 @@ export abstract class CategoriesService {
       )
 
       const categoriesFormatted = [
-        ...categories.map((category) => ({
-          id: category.id,
-          title: category.title,
-          count: category._count.news,
-        })),
         {
           id: uuidv4(),
           title: 'Все',
           count: totalCount,
         },
+        ...categories.map((category) => ({
+          id: category.id,
+          title: category.title,
+          count: category._count.news,
+        })),
       ]
 
       return {

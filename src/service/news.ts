@@ -17,7 +17,7 @@ export abstract class NewsService {
               category: { title: query.category },
             }),
           pubDate: {
-            lte: new Date(Number(query.timelapse)),
+            gte: new Date(Number(query.timelapse)),
           },
         },
         take: 25 + 1,
