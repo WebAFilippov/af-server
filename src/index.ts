@@ -1,11 +1,9 @@
-import { Elysia } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { swagger } from '@elysiajs/swagger'
 import { opentelemetry } from '@elysiajs/opentelemetry'
+import { readFileSync } from 'fs'
 
-import { cronFetchNews } from './controllers/cron-fetch-news'
-import { CategoriesController } from './controllers/categories'
 import { cors } from '@elysiajs/cors'
-import { NewsController } from './controllers/news'
 
 const app = new Elysia()
   .use(opentelemetry())
@@ -23,9 +21,27 @@ const app = new Elysia()
     })
   })
   .use(cors())
-  .use(cronFetchNews)
-  .use(CategoriesController)
-  .use(NewsController)
+  .get('/updates/latest.yml', () => {
+    const file = readFileSync('./src/updates/latest.yml', 'utf-8')
+    return new Response(file, {
+      headers: { 'Content-Type': 'text/yaml' },
+    })
+  })
+  .get(
+    '/updates/:filename',
+    ({ params: { filename }, error }) => {
+      const file = readFileSync(`./src/updates/${filename}`)
+      if (!file) return error(404)
+      return new Response(file, {
+        headers: { 'Content-Type': 'application/octet-stream' },
+      })
+    },
+    {
+      params: t.Object({
+        filename: t.String(),
+      }),
+    },
+  )
 
 app.listen(process.env.PORT || 4000, () =>
   console.log(`🦊 Server started at ${app.server?.url.origin}`),
